@@ -1,17 +1,23 @@
 #!/usr/bin/env node
-const SCREEN_WIDTH = 40
-const SCREEN_HEIGHT = 40
-const K1 = 2
-const K2 = 4
+const SCREEN_WIDTH = 50
+const SCREEN_HEIGHT = 50
+const R = 5  // radius
+// distance between screen to object center z
+const K2 = R
+// K1 is distance between eye to screen z
+const K1 = 3 / 5 * SCREEN_WIDTH;
+
+const TEXTURE = " .:-~=+*o$@";
 
 function sphereSurface() {
     result = []
-    for (let theta = 0; theta < Math.PI; theta += Math.PI / 200) {
-        for (let phi = 0; phi < 2 * Math.PI; phi += Math.PI / 200) {
-            let x = 5 * Math.sin(theta) * Math.cos(phi)
-            let y = 5 * Math.sin(theta) * Math.sin(phi)
-            let z = 5 * Math.cos(theta) + K2
-            result.push({ x: x, y: y, z: z })
+    for (let theta = 0; theta < Math.PI; theta += Math.PI / 100) {
+        for (let phi = 0; phi < 2 * Math.PI; phi += Math.PI / 100) {
+            // 3D polar coordinates
+            let x = R * Math.sin(theta) * Math.cos(phi)
+            let y = R * Math.sin(theta) * Math.sin(phi)
+            let z = R * Math.cos(theta) + K2
+            result.push({ x, y, z })
         }
     }
     return result
@@ -21,26 +27,33 @@ function convertTo2d(xyz) {
     return { x: (K1 * xyz.x / (xyz.z + K2)), y: (K1 * xyz.y / (xyz.z + K2)), z: xyz.z }
 }
 
-function mapping(xyzs) {
+function show(xyzs) {
     const xys = xyzs.map(xyz => convertTo2d(xyz))
-    const xo = SCREEN_WIDTH / 2
-    const yo = SCREEN_HEIGHT / 2
-    let view = []
+    let projection = []
     for (var i = 0; i < SCREEN_HEIGHT; i++) {
-        view[i] = [];
+        projection[i] = [];
         for (var j = 0; j < SCREEN_WIDTH; j++) {
-            view[i][j] = " ";
+            projection[i][j] = 0;
         }
     }
     for (const xy of xys) {
-        let xi = Math.floor(xy.x * 10) + xo
-        let yi = Math.floor(xy.y * 10) + yo
-        if (view[yi][xi] < Math.floor(xy.z)) {
-            view[yi][xi] = Math.floor(xy.z)
+        // x and y projection.
+        let xp = SCREEN_WIDTH / 2 + Math.floor(xy.x)
+        let yp = SCREEN_HEIGHT / 2 + Math.floor(xy.y)
+        if (projection[yp][xp] < Math.floor(xy.z)) {
+            projection[yp][xp] = Math.floor(xy.z)
         }
     }
-    console.log(view.map(p => p.join(" ")).join("\n"))
+    let strProjection = ""
+    for (const p of projection) {
+        for (const z of p) {
+            z
+            strProjection += TEXTURE[z] + " "
+        }
+        strProjection += "|\n"
+    }
+    console.log(strProjection)
 }
 
 const coordinates = sphereSurface()
-mapping(coordinates)
+show(coordinates)
