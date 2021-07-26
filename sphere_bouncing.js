@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const readline = require("readline");
 
 const SCREEN_WIDTH = 50;
@@ -10,7 +9,7 @@ let K2 = R;
 const K1 = (2 / 5) * SCREEN_WIDTH;
 // 仮想領域の奥行きの最大値 球3つ分とする
 const SPACE_Z = R * 2 * 3;
-const TEXTURE = " .-~:!=+*o$@";
+const TEXTURE = " .-~:!=+*o#$@";
 
 const INIT_V_THETA = -Math.PI / 6; // 移動ベクトルのx軸方向の角度
 const INIT_V_PHI = Math.PI / 4; // 移動ベクトルのy軸方向の角度

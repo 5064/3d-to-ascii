@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const SCREEN_WIDTH = 50;
 const SCREEN_HEIGHT = 50;
 const R = 5; // radius
@@ -7,7 +6,7 @@ const K2 = R;
 // K1 is distance between eye to screen z
 const K1 = (3 / 5) * SCREEN_WIDTH;
 
-const TEXTURE = " .-~:=+*o$@";
+const TEXTURE = " .-~:!=+*o#$@";
 
 function sphereSurface() {
   result = [];
